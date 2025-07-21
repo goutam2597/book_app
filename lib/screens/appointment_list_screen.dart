@@ -1,4 +1,3 @@
-import 'dart:convert';
 import 'package:book_app_api/api_service.dart';
 import 'package:flutter/material.dart';
 import '../models/appointment_model.dart';
@@ -7,18 +6,14 @@ import 'appointment_details_screen.dart';
 class AppointmentListScreen extends StatelessWidget {
   const AppointmentListScreen({super.key});
 
-  Future<List<AppointmentModel>> fetchAppointments() async {
-    final response = await ApiClient.get('customer/appointment');
-    final data = jsonDecode(response.body)['appointments']['data'] as List;
-    return data.map((e) => AppointmentModel.fromJson(e)).toList();
-  }
+  Future<List<AppointmentModel>> _fetchAppointments() => ApiService.getAppointments();
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(title: const Text('Appointments')),
       body: FutureBuilder<List<AppointmentModel>>(
-        future: fetchAppointments(),
+        future: _fetchAppointments(),
         builder: (context, snapshot) {
           if (snapshot.connectionState == ConnectionState.waiting) {
             return const Center(child: CircularProgressIndicator());

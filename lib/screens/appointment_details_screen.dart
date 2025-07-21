@@ -1,4 +1,3 @@
-import 'dart:convert';
 import 'package:book_app_api/api_service.dart';
 import 'package:flutter/material.dart';
 import '../models/appointment_details_model.dart';
@@ -7,17 +6,14 @@ class AppointmentDetailsScreen extends StatelessWidget {
   final int appointmentId;
   const AppointmentDetailsScreen({super.key, required this.appointmentId});
 
-  Future<AppointmentDetailsModel> fetchDetails() async {
-    final response = await ApiClient.get('customer/appointment/details/$appointmentId');
-    return AppointmentDetailsModel.fromJson(jsonDecode(response.body));
-  }
+  Future<AppointmentDetailsModel> _fetchDetails() => ApiService.getAppointmentDetails(appointmentId);
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(title: const Text('Appointment Details')),
       body: FutureBuilder<AppointmentDetailsModel>(
-        future: fetchDetails(),
+        future: _fetchDetails(),
         builder: (context, snapshot) {
           if (snapshot.connectionState == ConnectionState.waiting) {
             return const Center(child: CircularProgressIndicator());
@@ -32,6 +28,8 @@ class AppointmentDetailsScreen extends StatelessWidget {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Text(ap.serviceName, style: const TextStyle(fontSize: 20, fontWeight: FontWeight.bold)),
+                const SizedBox(height: 8),
+                Text('Order ID: ${ap.orderNumber}', style: const TextStyle(fontWeight: FontWeight.bold, color: Colors.blue)),
                 const SizedBox(height: 8),
                 Text('Booking Date: ${ap.bookingDate}'),
                 Text('Time: ${ap.startDate} - ${ap.endDate}'),

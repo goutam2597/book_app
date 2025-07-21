@@ -1,5 +1,6 @@
 class AppointmentDetailsModel {
   final int id;
+  final String orderNumber;
   final String customerName;
   final String customerPhone;
   final String customerEmail;
@@ -19,6 +20,7 @@ class AppointmentDetailsModel {
 
   AppointmentDetailsModel({
     required this.id,
+    required this.orderNumber,
     required this.customerName,
     required this.customerPhone,
     required this.customerEmail,
@@ -45,6 +47,7 @@ class AppointmentDetailsModel {
 
     return AppointmentDetailsModel(
       id: appointment['id'],
+      orderNumber: appointment['order_number'] ?? '',
       customerName: appointment['customer_name'] ?? '',
       customerPhone: appointment['customer_phone'] ?? '',
       customerEmail: appointment['customer_email'] ?? '',
@@ -64,4 +67,3 @@ class AppointmentDetailsModel {
     );
   }
 }
-

@@ -1,4 +1,3 @@
-import 'dart:convert';
 import 'package:book_app_api/api_service.dart';
 import 'package:flutter/material.dart';
 import 'dashboard_screen.dart';
@@ -17,37 +16,17 @@ class _LoginScreenState extends State<LoginScreen> {
   String? error;
 
   Future<void> login() async {
-    setState(() {
-      loading = true;
-      error = null;
-    });
-
-    try {
-      final response = await ApiClient.post('customer/login/submit', {
-        'username': usernameController.text.trim(),
-        'password': passwordController.text.trim(),
-      });
-      final data = jsonDecode(response.body);
-      if (data['status'] == 'success') {
-        ApiClient.token = data['token'];
-        Navigator.pushReplacement(
-          context,
-          MaterialPageRoute(builder: (_) => const DashboardScreen()),
-        );
-      } else {
-        setState(() {
-          error = data['message'] ?? 'Invalid credentials';
-        });
-      }
-    } catch (e) {
-      setState(() {
-        error = 'Login failed';
-      });
-    } finally {
-      setState(() {
-        loading = false;
-      });
+    setState(() { loading = true; error = null; });
+    final errorMsg = await ApiService.login(
+      usernameController.text.trim(),
+      passwordController.text.trim(),
+    );
+    if (errorMsg == null) {
+      Navigator.pushReplacement(context, MaterialPageRoute(builder: (_) => const DashboardScreen()));
+    } else {
+      setState(() { error = errorMsg; });
     }
+    setState(() { loading = false; });
   }
 
   @override
@@ -59,24 +38,14 @@ class _LoginScreenState extends State<LoginScreen> {
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            TextField(
-              controller: usernameController,
-              decoration: const InputDecoration(labelText: 'Username'),
-            ),
+            TextField(controller: usernameController, decoration: const InputDecoration(labelText: 'Username')),
             const SizedBox(height: 12),
-            TextField(
-              controller: passwordController,
-              decoration: const InputDecoration(labelText: 'Password'),
-              obscureText: true,
-            ),
+            TextField(controller: passwordController, decoration: const InputDecoration(labelText: 'Password'), obscureText: true),
             const SizedBox(height: 24),
-            if (error != null)
-              Text(error!, style: const TextStyle(color: Colors.red)),
+            if (error != null) Text(error!, style: const TextStyle(color: Colors.red)),
             ElevatedButton(
               onPressed: loading ? null : login,
-              child: loading
-                  ? const CircularProgressIndicator()
-                  : const Text('Login'),
+              child: loading ? const CircularProgressIndicator() : const Text('Login'),
             ),
           ],
         ),
