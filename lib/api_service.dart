@@ -1,24 +1,34 @@
-import 'dart:convert';
 import 'package:http/http.dart' as http;
 
-class ApiService {
-  final String baseUrl = "https://018ef2b7efba.ngrok-free.app/api";
+class ApiClient {
+  static String baseUrl = 'https://masud.kreativdev.com/bookapp/api/';
+  static String? token;
 
-  Future<Map<String, dynamic>> fetchServices() async {
-    final response = await http.get(Uri.parse("$baseUrl/services"));
-    if (response.statusCode == 200) {
-      return json.decode(response.body)['data'];
+  static Map<String, String> getHeaders() {
+    final headers = <String, String>{};
+    if (token != null) {
+      headers['Authorization'] = 'Bearer $token';
     }
-    throw Exception("Failed to load services");
+    return headers;
   }
 
-  Future<Map<String, dynamic>> fetchServiceDetails(int serviceId) async {
-    final response = await http.get(
-      Uri.parse("$baseUrl/services/details?id=$serviceId"),
+  static Future<http.Response> post(
+    String endpoint,
+    Map<String, dynamic> data,
+  ) async {
+    final url = Uri.parse('$baseUrl$endpoint');
+    final Map<String, String> stringData = data.map(
+      (key, value) => MapEntry(key.toString(), value.toString()),
     );
-    if (response.statusCode == 200) {
-      return json.decode(response.body)['data'];
-    }
-    throw Exception("Failed to load service details");
+    final headers = getHeaders();
+    // Explicitly set content-type if you want JSON (optional, for form-urlencoded you can skip this)
+    // headers['Content-Type'] = 'application/x-www-form-urlencoded';
+    return await http.post(url, body: stringData, headers: headers);
+  }
+
+  static Future<http.Response> get(String endpoint) async {
+    final url = Uri.parse('$baseUrl$endpoint');
+    final headers = getHeaders();
+    return await http.get(url, headers: headers);
   }
 }
