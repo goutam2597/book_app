@@ -6,18 +6,12 @@ import '../models/appointment_details_model.dart';
 
 class ApiService {
   static String baseUrl = 'https://masud.kreativdev.com/bookapp/api/';
-  static String? _token;
-
-  static String? get token => _token;
-
-  static set token(String? value) {
-    _token = value;
-  }
+  static String? token;
 
   static Map<String, String> getHeaders() {
     final headers = <String, String>{};
-    if (_token != null) {
-      headers['Authorization'] = 'Bearer $_token';
+    if (token != null) {
+      headers['Authorization'] = 'Bearer $token';
     }
     return headers;
   }
@@ -27,14 +21,11 @@ class ApiService {
     final url = Uri.parse('${baseUrl}customer/login/submit');
     final res = await http.post(
       url,
-      body: {
-        'username': username,
-        'password': password,
-      },
+      body: {'username': username, 'password': password},
     );
     final data = jsonDecode(res.body);
     if (data['status'] == 'success' && data['token'] != null) {
-      _token = data['token'];
+      token = data['token'];
       return null; // success
     } else {
       return data['message'] ?? 'Login failed';
