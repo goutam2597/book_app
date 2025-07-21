@@ -29,25 +29,53 @@ class DashboardScreen extends StatelessWidget {
               // User Info section
               CircleAvatar(
                 radius: 36,
-                backgroundImage: dashboard.userPhoto != null && dashboard.userPhoto!.isNotEmpty
+                backgroundImage:
+                    dashboard.userPhoto != null &&
+                        dashboard.userPhoto!.isNotEmpty
                     ? NetworkImage(dashboard.userPhoto!)
-                    : const AssetImage('assets/images/userplaceholder.png') as ImageProvider,
-                child: (dashboard.userPhoto == null || dashboard.userPhoto!.isEmpty)
+                    : const AssetImage('assets/images/userplaceholder.png')
+                          as ImageProvider,
+                child:
+                    (dashboard.userPhoto == null ||
+                        dashboard.userPhoto!.isEmpty)
                     ? const Icon(Icons.person, size: 40)
                     : null,
               ),
               const SizedBox(height: 8),
-              Text(dashboard.userName, style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 20)),
-              Text(dashboard.userEmail, style: const TextStyle(fontSize: 14, color: Colors.grey)),
+              Text(
+                dashboard.userName,
+                style: const TextStyle(
+                  fontWeight: FontWeight.bold,
+                  fontSize: 20,
+                ),
+              ),
+              Text(
+                dashboard.userEmail,
+                style: const TextStyle(fontSize: 14, color: Colors.grey),
+              ),
               const SizedBox(height: 32),
               // Counts section
-              Text('Wishlists: ${dashboard.wishlistsCount}', style: const TextStyle(fontSize: 18)),
-              Text('Appointments: ${dashboard.appointmentsCount}', style: const TextStyle(fontSize: 18)),
-              Text('Orders: ${dashboard.ordersCount}', style: const TextStyle(fontSize: 18)),
+              Text(
+                'Wishlists: ${dashboard.wishlistsCount}',
+                style: const TextStyle(fontSize: 18),
+              ),
+              Text(
+                'Appointments: ${dashboard.appointmentsCount}',
+                style: const TextStyle(fontSize: 18),
+              ),
+              Text(
+                'Orders: ${dashboard.ordersCount}',
+                style: const TextStyle(fontSize: 18),
+              ),
               const SizedBox(height: 24),
               ElevatedButton(
                 onPressed: () {
-                  Navigator.push(context, MaterialPageRoute(builder: (_) => const AppointmentListScreen()));
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (_) => const AppointmentListScreen(),
+                    ),
+                  );
                 },
                 child: const Text('View Appointments'),
               ),
